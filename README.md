@@ -16,3 +16,11 @@ Guided project for **Node DB3** Module.
 - [ ] type `npm run server` to start the API.
 
 Please follow along as the instructor creates database access methods for a multi table schema.
+
+
+```
+npm show knex versions 
+npm uninstall knex @vscode/sqlite3
+npm install knex@0.95.15 sqlite3
+
+```
