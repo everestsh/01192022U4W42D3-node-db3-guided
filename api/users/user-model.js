@@ -20,8 +20,22 @@ async function findPosts(user_id) {
       },
       etc
     ]
+    select contents, username, p.id as post_id
+ from posts as p
+ left join users as u
+    on u.id = p.user_id 
+    where u.id=2;
   */
- return 'foo'
+ //  return 'foo'
+//  const rows = await db('posts as p')
+//       .join('users as u', 'u.id', '=', 'p.user_id')
+//       .select('contents', 'username', 'p.id as post_id')
+//       .where('u.id', user_id)
+  const rows = await db('posts as p')
+      .join('users as u', 'u.id', 'p.user_id')
+      .select('contents', 'username', 'p.id as post_id')
+      .where('u.id', user_id)
+    return rows
 }
 
 function find() {
