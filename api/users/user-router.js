@@ -19,7 +19,7 @@ router.get('/:id', checkUserId, (req, res, next) => {
     })
     .catch(next)
 })
-
+// TEST: http get :9000/api/users/4/posts
 router.get('/:id/posts', checkUserId, (req, res, next) => {
   User.findPosts(req.params.id)
     .then(posts => {
