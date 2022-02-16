@@ -7,7 +7,7 @@ module.exports = {
   add,
   remove
 }
-
+//  http get :8000/api/users/1/posts
 async function findPosts(user_id) {
   /*
     Implement so it resolves this structure:
@@ -37,9 +37,10 @@ async function findPosts(user_id) {
       .where('u.id', user_id)
     return rows
 }
+//  http get :8000/api/users
+async function find() {
+  // return db('users')
 
-function find() {
-  return db('users')
   /*
     Improve so it resolves this structure:
 
@@ -56,11 +57,22 @@ function find() {
         },
         etc
     ]
+      select u.id as user_id, username, count(p.id) as post_count
+      from users as u
+      left join posts as p
+          on u.id = p.user_id
+      group by u.id
+      order by post_count desc;
   */
+    const rows = await db('users as u')
+                .leftJoin('posts as p', 'u.id', 'p.user_id')
+                .select('u.id as user_id', 'username')
+                .count('p.id as post_count')
+    return rows
 }
-
-function findById(id) {
-  return db('users').where({ id }).first()
+//  http get :8000/api/users/1
+async function findById(id) {
+  // return db('users').where({ id }).first()
   /*
     Improve so it resolves this structure:
 
@@ -75,7 +87,28 @@ function findById(id) {
         etc
       ]
     }
+
+    select username, u.id as user_id, p.id as post_id,contents
+    from users as u
+    left join posts as p
+        on u.id = p.user_id
+    where u.id = 4;
   */
+    const rows = await db('users as u')
+                 .leftJoin('posts as p', 'u.id', 'p.user_id')
+                 .select(' username ', ' u.id as user_id', ' p.id as post_id', ' contents')
+                 .where('u.id', id)
+    const result = {
+      user_id: rows[0].username,
+      username: rows[0].user_id,
+      posts : rows.reduce((posts, post) =>  
+        {
+          if (!post.post_id) return posts
+          const { contents, post_id } = post
+          return posts.concat({ contents, post_id })
+        }, [])
+    }
+    return result
 }
 
 function add(user) {
